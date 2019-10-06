@@ -3,8 +3,26 @@
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
+<!--         MyBatis3 :此值为targetRuntime属性的默认值。
+        使用这个值，MBG将生成与 “Mybatis v3.0及以上版本 和 JSE 5.0 及以上版本”相兼容的对象
+        （例如，Java模型和映射器接口将使用泛型类型）。
+        在这些生成的对象中，"by example" 方法支持几乎所有的动态子句。
+        此外，使用这些生成的java对象还支持 JSE 5.0特性，包括泛型和注解。 -->
     <context id="Mysql"  targetRuntime="MyBatis3" >
+<!--         需要注意一下，在context元素中，子元素出现的顺序是有要求的。必须按如下顺序出现。
+        property (0个或多个)
+        plugin (0个或多个)
+        commentGenerator (0个或1个)
+        connectionFactory (connectionFactory 或jdbcConnection 必有其一)
+        jdbcConnection (connectionFactory 或jdbcConnection 必有其一)
+        javaTypeResolver (0个或1个)
+        javaModelGenerator (1个必填)
+        sqlMapGenerator (0个或1个)
+        javaClientGenerator (0个或1个)
+        table (1个或多个) -->
         <!--给Mapper增加extends-->
+<!--             plugin元素用来定义一个插件。
+            插件用于扩展或修改通过MyBatis Generator (MBG)代码生成器生成的代码。 -->
         <plugin type="tmall.util.MBGPlugins.MapperExtendsPlugin">
             <property name="mappers" value="tmall.mapper.BaseMapper"/>
         </plugin>
@@ -19,26 +37,73 @@
         <!--给select增加deleteAt is null属性-->
         <plugin type="tmall.util.MBGPlugins.DeleteAtPlugin">
         </plugin>
-
+         
+<!--             commentGenerator元素是可选的，并且在context元素中最多只能存在一个。
+            commentGenerator 元素用于配置注释生成器的属性。
+            在MBG中注释生成器用于生成 Java文件和XML文件中的注释。
+            默认的注释生成器将JavaDoc 注释添加到生成的Java元素和XML元素上。
+            注释的目的是要告诉用户这个元素是自动生成的，
+            并且有可能重新生成（也就是说这部分内容不应该被用户修改）。 -->
+            
         <commentGenerator>
+                
+<!--                 这个元素用来指定生成的注释中是否包含生成的日期。 这个属性有以下可选值：
+                1. false 这是默认值 
+                当这个属性是false或者没有指定时，所有元素生成注释时都会带着生成时间。 
+                2. true 当这个属性是true时，注释中不会添加生成时间。 -->
+                
             <property name="suppressDate" value="true" />
         </commentGenerator>
-
+            
+<!--        jdbcConnection元素用于指定数据库连接所需的的属性。 
+            每一个context元都必须有且仅有一个jdbcConnection元素。
+            配置该元素需要注意如果JDBC驱动不在classpath下，
+            就需要通过<classPathEntry>元素引入jar包，这里推荐将jar包放到classpath下。 -->
+            
         <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost/tmall" userId="root" password="admin">
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
+            
+<!--            该元素只有两个属性，都是必选的。
+                targetPackage:生成实体类存放的包名。
+                一般就是放在该包下，实际还会受到其他配置的影响(<table>中会提到)。
+                targetProject:指定目标项目路径，使用的是文件系统的绝对路径。 -->
+            
         <javaModelGenerator targetPackage="tmall.pojo" targetProject="src/main/java">
+<!--                 enableSubPackages:如果true，MBG会根据catalog和schema来生成子包。
+                如果false就会直接用targetPackage属性。默认为false。 -->
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
+            
+            
+<!--             该元素可选，在context中最多配置一个。但是有如下两种必选的特殊情况：
+                如果targetRuntime目标是iBATIS2，该元素必须配置一个。
+                如果targetRuntime目标是MyBatis3，只有当<javaClientGenerator>需要XML时，
+                该元素必须配置一个。 如果没有配置 <javaClientGenerator>，则使用以下的规则：
+                如果指定了一个<sqlMapGenerator>，那么MBG将只生成XML的SQL映射文件和实体类。
+                如果没有指定<sqlMapGenerator>，那么MBG将只生成实体类。 -->
+<!--             
+            该元素只有两个属性（和前面提过的<javaModelGenerator>的属性含义一样），都是必选的。
+
+targetPackage:生成实体类存放的包名，一般就是放在该包下。实际还会受到其他配置的影响(<table>中会提到)。
+targetProject:指定目标项目路径，使用的是文件系统的绝对路径。 -->
+            
         <sqlMapGenerator targetPackage="tmall.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
+            
+<!--             javaClientGenerator元素可选，在context元素中最多配置一个。如果不配置该元素，就不会生成Mapper接口。 -->
+            
+            
+<!--             XMLMAPPER：所有的方法都在XML中，接口调用依赖XML文件。 -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="tmall.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
+            
+            
         <table tableName="category" domainObjectName="Category" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="true" selectByExampleQueryId="false">
             <property name="rootClass" value="tmall.pojo.extension.CategoryExtension"/>
             <property name="my.isgen.usekeys" value="true"/>
