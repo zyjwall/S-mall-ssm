@@ -1,8 +1,19 @@
+<!-- https://www.cnblogs.com/benjieqiang/p/11183580.html -->
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+<!--         在resources文件夹中，创建Mybatis的主配置文件SqlMapConfig.xml。它是mybatis核
+
+心配置文件，配置文件内容为数据源、事务管理。
+
+配置环境：
+
+配置mysql的环境：
+配置事务的类型；
+配置连接池：配置连接数据库的4个基本信息；
+指定映射配置文件的位置： -->
     <settings>
         <setting name="cacheEnabled" value="false"/>
         <setting name="defaultStatementTimeout" value="3000"/>
